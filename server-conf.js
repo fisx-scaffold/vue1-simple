@@ -97,7 +97,7 @@ exports.getLocations = function () {
             handler: [
                 file(),
                 stylus(
-                    require('./tool/stylus')(stylus, true)
+                    require('./tool/stylus')(stylusParser, true)
                 )
             ]
         },
