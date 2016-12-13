@@ -1,17 +1,29 @@
 <template>
 <div id="app">
     <p>
-        Welcome to your Vue.js app!
+        {{msg}}
     </p>
 </div>
 </template>
 
 <script>
 export default {
-  components: {
-  }
+    data() {
+        return {
+            msg: 'Welcome to Your Vue.js App'
+        }
+    },
+    components: {
+    }
 };
 </script>
 
-<style>
+<style lang="stylus">
+#app
+    font-family: 'Avenir', Helvetica, Arial, sans-serif
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+    text-align: center
+    color: #2c3e50
+    margin-top: 60px
 </style>
