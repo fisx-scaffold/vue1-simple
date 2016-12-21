@@ -34,14 +34,12 @@ exports.documentRoot = __dirname;
 
 exports.getLocations = function () {
     var vueLoader = require('fisx-vue1-loader');
-    var babel = require('babel-core');
     var stylusParser = require('stylus');
-    var projectPkgMetaData = require('./package.json');
-
+    var babelHandlers = babelProcessor();
     var vueHandlers = vueProcessor({
         sourceMap: true,
         parser: {
-            babel: babel,
+            babel: require('babel-core'),
             stylus: [
                 stylusParser,
                 require('./tool/stylus')()
@@ -53,13 +51,8 @@ exports.getLocations = function () {
             }
         },
         vueLoader: vueLoader,
-        defaultSrcHandler: function (content, context) {
-            babelHandlers.processESFile(
-                babel, projectPkgMetaData.babel, content, context
-            );
-        }
+        defaultSrcHandler: babelHandlers.processESFile
     });
-    var babelHandlers = babelProcessor(babel, projectPkgMetaData.babel);
 
     var requireInjector = requireConfigInjector({
         requireConfig: {
@@ -127,5 +120,14 @@ exports.injectRes = function (res) {
         if (res.hasOwnProperty(key)) {
             global[key] = res[key];
         }
+    }
+};
+
+// disable watchreload setting false
+exports.watchreload = {
+    hmr: true,
+    logLevel: 'debug',
+    fileTypes: {
+        script: 'js,vue'
     }
 };
