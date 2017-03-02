@@ -6,11 +6,10 @@
 var pageFiles = ['index.html'];
 var isProduction = fis.isProduction();
 
+// 这样可以直接忽略未依赖的文件处理，最后只输出依赖的文件
 fis.addIgnoreFiles([
-    '/dep/vue/src/**',
-    '/dep/vue/dist/vue.js',
-    '/dep/vue/dist/vue.min.js',
-    '/dep/vue/dist/vue.min.js.map'
+    '/dep/**',
+    '/dep/*'
 ]);
 
 // 初始化要编译的样式文件: 只处理页面引用的样式文件
@@ -27,6 +26,14 @@ fis.match('index.html', {
 
 // 启用 amd 模块编译
 fis.hook('amd', {
+    // 声明动态模块 id：构建打包过程中动态创建的模块
+    dynamic: [
+        'babelHelpers'
+    ],
+    // 外部模块 id 信息
+    externals: [
+        /vue\-hot\-reload\-api$/
+    ],
     config: fis.getModuleConfig()
 });
 
@@ -108,13 +115,9 @@ fis.match('::package', {
         page: {
             files: pageFiles,
             // 打包页面异步入口模块
-            packAsync: true
-        },
-        bundles: [
-            {
-                files: [/\/src\/.*\-vue\-part.*\.css/],
-                target: 'src/main.styl'
-            }
-        ]
+            packAsync: true,
+            // 打包页面模块依赖的样式，默认打包到页面引用的样式文件里
+            packDepStyle: true
+        }
     })
 });
